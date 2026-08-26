@@ -44,6 +44,10 @@ do not simulate an unbounded scroll loop.
 | Lauritz.com | `https://www.lauritz.com/da/auctions/search/<encoded-query>`. | `/da/auction/<slug>/<numeric-id>`; original lots expose description/condition, dimensions/marks when catalogued, images, end time, estimate and next/current bid. | Verified: 60 items/page and `skip=60&take=60` after native `Next page`. A zero-result query is a terminal saved scope. `Vurdering` and `Næste bud` are not sold prices. |
 | Blomqvist | `https://www.blomqvist.no/sok/<encoded-query>`, then follow every active `Auksjoner / Kategori` link returned by the search. | `/auksjoner/<category-path>/<numeric-id>`; lots expose object number, description, note/condition, images, estimate, next bid and end time. | Category/list pages use native `Neste` and `?page=2`. Do not confuse the separate `Tilslagsliste` section with active discovery; only an original ended lot can provide a realised result. |
 | Hagelstam | `https://www.hagelstam.fi/en/search?search=<encoded-query>` via the visible `Site search` field. | `/en/items/<category>/<slug>-<numeric-id>`; detail pages expose title/attribution, material, dimensions, original full-size images, start/status and, for ended lots, explicit hammer price. | Search-result pagination is source-native; the all-items archive independently shows 40/page and a `Seuraava sivu` control. Exclude expert contact details. Only explicit `Hammer price` on an ended original lot is `sold_hammer`. |
+| Willhaben | `https://www.willhaben.at/iad/kaufen-und-verkaufen/marktplatz?keyword=<encoded-query>`. | `/iad/kaufen-und-verkaufen/d/<slug>-<numeric-id>/`; details expose asking price, private/commercial signal, description, condition, category and an original gallery. | Native `page=2` and following links were verified on a 193-result WMF-Jugendstil search. Preserve only listing facts, not seller identity/contact data; “im Stil von WMF” is not attribution. |
+| Marktplaats | `https://www.marktplaats.nl/q/<plus-separated-query>/`. | Only original `/v/.../m<numeric-id>-...` ads; details expose asking price, description, material claim and a multi-image gallery. | Native page buttons and `Volgende` were verified. Reject `Topadvertentie`, seller `Catawiki` and `/v/.../a<numeric-id>` sponsor mirrors before import. |
+| Subito | `https://www.subito.it/annunci-italia/vendita/usato/?q=<encoded-query>`. | Original links end in `-<numeric-id>.htm`; cards/details expose price and images. | Native numbered pagination and next-page controls were verified. Prefer `jugendstil`, `liberty`, `art déco` and high-value object terms; broad `WMF` has heavy modern-appliance noise. |
+| Wallapop | `https://es.wallapop.com/search?keywords=<encoded-query>&order_by=most_relevance`. | `/item/<slug>-<numeric-id>`; details expose asking price, condition, brand/material claims, description and gallery. | Client-rendered results and direct details were verified. Record seen IDs after each loaded chunk and stop at no new IDs; never run an unbounded scroll loop. |
 
 ## Detail enrichment
 
@@ -60,9 +64,9 @@ that distinction.
 
 ## Activation gate for next sources
 
-The registered next-source queue is Willhaben, Marktplaats, FINN.no, Tutti,
-Anibis, Allegro, Allegro Lokalnie, OLX Polska, Subito, Wallapop, CustoJusto,
-Aukro and Bazoš. Facebook Marketplace is excluded. Some have prototype search
+The registered next-source queue is FINN.no, Tutti, Anibis, Allegro, Allegro
+Lokalnie, OLX Polska, CustoJusto, Aukro and Bazoš. Facebook Marketplace is
+excluded. Some have prototype search
 evidence, but none becomes recurring/live merely because a result page loaded.
 
 For each new regional house, first prove all five fields in the Codex browser:

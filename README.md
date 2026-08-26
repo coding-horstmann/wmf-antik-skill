@@ -27,6 +27,18 @@ source scopes, native pagination, selected original-image/detail checks or
 candidate-level realised-price checks remain open. Documented source blockers
 remain visible in the result.
 
+The current source contract contains 24 enabled discovery sources and 234
+bounded initial query scopes. Railway handles source-compatible HTTP work;
+Willhaben, Marktplaats, Subito, Wallapop and other dynamic fallbacks are worked
+only in the Codex in-app Browser. Shortlist images are copied to durable object
+storage so the dashboard is not dependent on expiring marketplace URLs.
+
+The current source contract contains 24 enabled discovery sources and 234
+bounded initial query scopes. Railway handles source-compatible HTTP work;
+Willhaben, Marktplaats, Subito, Wallapop and other dynamic fallbacks are worked
+only in the Codex in-app Browser. Shortlist images are copied to durable object
+storage so the dashboard is not dependent on expiring marketplace URLs.
+
 The skill never browser-scrapes eBay, bypasses access controls, bids, buys or
 asserts physical authenticity. Visible mark photos are valuable evidence but
 are not a mandatory admission condition; unresolved attribution and material

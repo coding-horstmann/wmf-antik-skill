@@ -25,6 +25,7 @@ stays token-light.
 | Blocket, DBA, Tori.fi | Swedish, Danish and Finnish marketplace discovery | Enabled; source-native search, stable ad IDs, detail JSON-LD and native page-2 links were proven. Asking prices are only offer context. |
 | Kleinanzeigen, Leboncoin, Ricardo | German, French and Swiss marketplace discovery | Enabled; direct search, stable ad/offer IDs, detail evidence and native continuation were proven. Asking prices and active bids are never realised references. |
 | Lauritz.com, Blomqvist, Hagelstam | Danish, Norwegian and Finnish regional-auction discovery | Enabled; direct search/catalogue path, stable lot IDs, detail evidence and native page/end behavior were proven. Blomqvist expands search categories before pagination; Hagelstam separates active lots from explicit archived hammer prices. |
+| Willhaben, Marktplaats, Subito, Wallapop | Austrian, Dutch, Italian and Spanish private-market discovery | Enabled through the Codex in-app Browser after stable-ID, price, gallery and continuation/end tests. Marktplaats sponsor mirrors are excluded; broad modern WMF kitchenware is filtered before detail work. |
 | Auktionshaus Mehlis | Original completed-sale reference | Reference-only |
 | Dorotheum, Koller | Staged research sources | Not included in a `go` run until their remaining individual browser gate is complete |
 
@@ -44,8 +45,8 @@ reason to fetch from an unimplemented source.
    npm run go
    ```
 
-   Retain the returned `runId`. The current plan has 197 bounded
-   source/query scopes across 20 enabled discovery sources. It is a declared
+   Retain the returned `runId`. The current plan has 234 bounded
+   source/query scopes across 24 enabled discovery sources. It is a declared
    breadth target, not a claim that every result page has already been read.
 2. Monitor `scripts/inspect-collection-jobs.mjs <run-id>`. Railway processes
    compatible direct pages. In the Codex in-app browser, work every explicit
@@ -87,7 +88,19 @@ reason to fetch from an unimplemented source.
    and `detail.imageUrls`. A small search-card image remains
    `source_thumbnail_only`; only URLs captured on the original detail page
    count as an inspected image set.
-6. For every selected candidate, inspect its original-lot reference query plan
+   Archive all shortlist images in the configured Railway object bucket:
+
+   ```powershell
+   npm run images:archive -- <run-id>
+   npm run images:inspect -- <run-id>
+   ```
+
+   If a protected source returns HTML instead of image bytes, obtain the
+   original gallery bytes with the Codex in-app Browser page-assets bundle and
+   import them with `scripts/import-browser-image-bundle.mjs`. The dashboard
+   prefers frozen bucket URLs and cycles through every captured listing image.
+6. First run the deterministic known-corpus matcher; then inspect every
+   selected candidate's unresolved original-lot reference query plan
    in the Codex browser. Freeze the source outcomes and import them with
    `scripts/record-reference-checks.mjs`. It records a genuine no-result search
    separately from an unstarted search, requires a terminal result for every
@@ -99,6 +112,7 @@ reason to fetch from an unimplemented source.
    when each blocker has frozen evidence.
 
    ```powershell
+   npm run references:match-known -- <scout-run-id>
    node --env-file=.env.migrate.local scripts/inspect-run.mjs <scout-run-id>
    npm run go:advance -- <scout-run-id>
    npm run lint
@@ -108,8 +122,9 @@ reason to fetch from an unimplemented source.
    Production reads from the database dynamically, so normal completed runs
    do not require a redeploy. Deploy only when dashboard code changed.
 7. After review, run `scripts/backfill-object-corpus.mjs`; build/extend the
-   balanced pair queue with `scripts/build-benchmark-pairs.mjs 500`. Do not
-   count queued pairs as visual labels.
+   balanced pair queue with `scripts/build-benchmark-pairs.mjs 500`, materialize
+   at most 30 pairs per visual batch and import only genuinely two-pass-reviewed
+   labels. Do not count queued or merely materialized pairs as visual labels.
 
 ## Price Handling
 

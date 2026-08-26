@@ -34,10 +34,10 @@ implementation gap, not evidence that WMF supply is absent.
 
 | Tier | Candidates | Use |
 |---|---|---|
-| Active direct discovery | Auctionet, Interencheres, Lot-tissimo, Drouot, Wendl, Hebergs, Olséns, Snapphane, Tradera, Bukowskis, catalogue-bounded Bruun Rasmussen, Blocket, DBA, Tori.fi, Kleinanzeigen, Leboncoin, Ricardo, Lauritz.com, Blomqvist, Hagelstam | Page-by-page direct-browser batches only; document source query/catalogue, rate and continuation. Marketplace numbers are offers, not realised prices. Hagelstam archives may contribute only explicit original-lot hammer prices. |
+| Active direct discovery | Auctionet, Interencheres, Lot-tissimo, Drouot, Wendl, Hebergs, Olséns, Snapphane, Tradera, Bukowskis, catalogue-bounded Bruun Rasmussen, Blocket, DBA, Tori.fi, Kleinanzeigen, Leboncoin, Ricardo, Lauritz.com, Blomqvist, Hagelstam, Willhaben, Marktplaats, Subito, Wallapop | Page-by-page direct-browser batches only; document source query/catalogue, rate and continuation. Marketplace numbers are offers, not realised prices. Hagelstam archives may contribute only explicit original-lot hammer prices. Marktplaats sponsor mirrors are rejected before import. |
 | Validated but non-live candidates | Dorotheum, Koller | Maintain source-specific proof gaps; do not include in a `go` run yet |
 | Reference-only | Mehlis | Original completed lots only |
-| Expansion candidates | Willhaben, Marktplaats, FINN.no, Tutti, Anibis, Allegro, Allegro Lokalnie, OLX Polska, Subito, Wallapop, CustoJusto, Aukro, Bazoš | Registered but disabled until each passes the same source gate; Facebook Marketplace excluded |
+| Expansion candidates | FINN.no, Tutti, Anibis, Allegro, Allegro Lokalnie, OLX Polska, CustoJusto, Aukro, Bazoš | Registered but disabled until each passes the same source gate; Facebook Marketplace excluded |
 
 The list is a research queue, not a claim that any source currently permits or
 technically supports WMF collection.
@@ -60,7 +60,7 @@ price basis.
 A deliberately small pilot should normally cap each source at 20 explicit WMF
 results plus 5–10 broad, unbranded discovery records. A user-started
 `WMF Scout go` uses the larger source-specific safety segments in the verified
-197-scope v3 plan instead; each segment remains bounded and auditable, while
+234-scope v3 plan instead; each segment remains bounded and auditable, while
 native pagination is continued until its explicit end or a frozen blocker.
 Record query, timestamp, page/category scope and continuation. Stop an
 individual collector when its source gate fails or its rate/technical boundary

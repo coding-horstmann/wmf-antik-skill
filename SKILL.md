@@ -80,16 +80,17 @@ retrieval evidence, never authentication or automatic price comparability.
    It seeds all 36 registered contracts, starts or resumes the single unfinished
    `skill_go` run, creates durable jobs and triggers the Railway collector when
    configured. Do not create a competing run.
-2. Report the enabled set honestly. Currently 20 discovery sources are live:
+2. Report the enabled set honestly. Currently 24 discovery sources are live:
    **Auctionet, Interencheres, Lot-tissimo, Drouot, Wendl, Hebergs, Olséns,
    Snapphane, Tradera, Bukowskis, catalogue-bounded Bruun Rasmussen, Blocket,
    DBA, Tori.fi, Kleinanzeigen, Leboncoin, Ricardo, Lauritz.com, Blomqvist and
-   Hagelstam**. **Mehlis** is reference-only.
-3. The registry additionally contains **Dorotheum, Koller, Willhaben,
-   Marktplaats, FINN.no, Tutti, Anibis, Allegro, Allegro Lokalnie, OLX Polska,
-   Subito, Wallapop, CustoJusto, Aukro and Bazoš**. Do not count any of them as
-   searched until its own public-access, stable-ID, price, image and pagination
-   gate passes. Facebook Marketplace is excluded.
+   Hagelstam, Willhaben, Marktplaats, Subito and Wallapop**. **Mehlis** is
+   reference-only.
+3. The registry additionally contains **Dorotheum, Koller, FINN.no, Tutti,
+   Anibis, Allegro, Allegro Lokalnie, OLX Polska, CustoJusto, Aukro and Bazoš**.
+   Do not count any of them as searched until its own public-access, stable-ID,
+   price, image and pagination/end gate passes. Facebook Marketplace is
+   excluded.
 4. Monitor `scripts/inspect-collection-jobs.mjs <run-id>`. Railway completes
    only source-compatible direct pages. A blocked, dynamic or ambiguous server
    response becomes `browser_fallback`; work every such job in the Codex
@@ -106,8 +107,15 @@ retrieval evidence, never authentication or automatic price comparability.
    hard maximum of 75. Open only shortlisted original details. Import
    description, condition, dimensions, model/mark text and every original
    detail image. A card thumbnail is `source_thumbnail_only`, not a completed
-   image review.
-7. For every selected candidate complete its original-house reference plan.
+   image review. Archive shortlist images in the configured Railway object
+   bucket with `archive-shortlist-images.mjs`; if the server receives a blocked
+   HTML response instead of image bytes, bundle the original gallery through
+   the Codex in-app Browser and import it with
+   `import-browser-image-bundle.mjs`. Never call an archived-but-uninspected
+   file an image review.
+7. First run `match-known-reference-corpus.mjs` so compatible, already frozen
+   sold lots can be linked without browser cost. Then, for every selected
+   candidate, complete its remaining original-house reference plan.
    Use `scripts/record-reference-checks.mjs`. A no-result outcome is valid only
    with terminal evidence for every planned source. An exact/near reference
    requires the original sold-lot URL, price basis, material, form/model and an
@@ -122,7 +130,8 @@ retrieval evidence, never authentication or automatic price comparability.
    `live_candidate`, and `negative_example`. Never mix offer prices into the
    sold corpus.
 10. Maintain a balanced 300–500 pair benchmark with
-    `scripts/build-benchmark-pairs.mjs` and `export-benchmark-review.mjs`.
+    `scripts/build-benchmark-pairs.mjs`, `materialize-benchmark-review.mjs`,
+    `import-benchmark-labels.mjs` and `export-benchmark-review.mjs`.
     Visual/model similarity and valuation comparability are separate labels.
     Codex inspects both objects in two passes. A metadata-prefiltered `queued`
     pair is not an AI-reviewed visual label. Send only disagreements and a
@@ -162,6 +171,11 @@ retrieval evidence, never authentication or automatic price comparability.
   `prepare-shortlist-review.mjs`, `record-reference-checks.mjs`,
   `reconcile-reference-matches.mjs` and `complete-scout-run.mjs` implement the
   durable full-run ledger.
-- `backfill-object-corpus.mjs`, `build-benchmark-pairs.mjs` and
-  `export-benchmark-review.mjs` maintain the multi-image identity corpus and
-  two-axis benchmark without treating queued work as reviewed evidence.
+- `archive-shortlist-images.mjs`, `railway-image-store.mjs` and
+  `import-browser-image-bundle.mjs` preserve shortlist images independently of
+  expiring source URLs.
+- `backfill-object-corpus.mjs`, `match-known-reference-corpus.mjs`,
+  `build-benchmark-pairs.mjs`, `materialize-benchmark-review.mjs`,
+  `import-benchmark-labels.mjs` and `export-benchmark-review.mjs` maintain the
+  object/reference corpus and two-axis benchmark without treating queued work
+  as reviewed evidence.
