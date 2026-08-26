@@ -1,0 +1,6 @@
+interface:
+  display_name: "WMF Antik Scout"
+  short_description: "Checks undervalued antique WMF objects"
+  default_prompt: "Use $scout-wmf-antiques for WMF Scout go: start or resume the single full run, trigger Railway-first collection, complete every Codex-Browser fallback, paginate to documented ends, triage and review the shortlist, link realised-price references, reconcile conservative values, update corpus and dashboard, and finish without waiting for follow-up prompts."
+policy:
+  allow_implicit_invocation: true
