@@ -147,7 +147,15 @@ reason to fetch from an unimplemented source.
 
 ## Dashboard Views
 
-- `/` shows the newest completed run by default and allows run selection.
+- `/` shows the newest completed run by default and allows run selection. It
+  renders every selected shortlist candidate, including unresolved records;
+  missing image, detail, material or price evidence is displayed as `?`.
+- The summary counts `Kandidaten geprüft` and active `belastbar belegte Deals`
+  separately. Only active A/B candidates count as deals.
+- Candidate cards link their title directly to the source listing and show only
+  valuation-eligible exact/near realised-price references. Context matches,
+  estimates and offers remain searchable in `/references` but do not appear as
+  comparable-price evidence on a deal card.
 - `/references` is the combined filterable reference library. Realised prices,
   dealer offers, marketplace offers, estimates and identity-only records retain
   visibly different roles.

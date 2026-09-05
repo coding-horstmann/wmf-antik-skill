@@ -108,7 +108,10 @@ retrieval evidence, never authentication or automatic price comparability.
 6. Run `scripts/advance-scout-go.mjs <run-id>`. It performs deterministic
    exclusions, conservative cross-source deduplication and a diversified
    shortlist. The default is 50 records, at most eight per object class and a
-   hard maximum of 75. Open only shortlisted original details. Import
+   hard maximum of 75. Display the complete selected shortlist in the dashboard;
+   missing detail, image, price or material evidence stays visible as `?` and
+   never causes a selected candidate to disappear. Review the highest-priority
+   20–30 original detail pages before final matching. Import
    description, condition, dimensions, model/mark text and every original
    detail image. A card thumbnail is `source_thumbnail_only`, not a completed
    image review. Archive shortlist images in the configured Railway object
@@ -177,6 +180,10 @@ retrieval evidence, never authentication or automatic price comparability.
    runs. Deploy only code changes. The landing page is the latest completed run;
    `/references` is the filterable combined reference library and `/ebay`
    redirects to the eBay offer-context filter. There is no watchlist workflow.
+   The run summary separates all reviewed shortlist candidates from active
+   evidence-qualified A/B deals. Candidate cards show only valuation-eligible
+   exact/near realised-price links; context matches and asking prices remain in
+   the reference library and never masquerade as deal evidence.
    Report source coverage, Railway/browser routing, raw/unique counts,
    shortlist, all linked comparable results, corridor status,
    corpus/benchmark counts and unresolved risks.
