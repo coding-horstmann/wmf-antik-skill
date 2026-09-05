@@ -67,7 +67,7 @@ Railway response and error have been recorded.
 | Lempertz | Native search parameter `tx_kesearch_pi1[sword]` with the bounded seed set `Geislingen`, `Ikora`, `Myra`, `Breuhaus`, `Albin Müller`. | Canonical `/de/kataloge/lot/<auction>/<lot>-<slug>.html`; store catalogue/lot identity, original images, date, material, dimensions, designer and only explicit `Ergebnis … (inkl. Aufgeld)` as `sold_with_premium`. | Follow native `tx_kesearch_pi1[page]` only when exposed. The literal acronym `WMF` may return zero while maker/place/series terms return genuine WMF lots. Missing online condition remains explicitly unknown. |
 
 Import only a validated bounded bundle through
-`scripts/browser-reference-receiver.mjs`, which accepts these four original
+`scripts/browser-reference-receiver.mjs`, which accepts these five original
 hosts and explicit realised price types. Include the durable `backfillJobId`;
 an empty `records` array additionally requires terminal evidence. After import
 run `backfill-object-corpus.mjs` before candidate matching.

@@ -48,7 +48,7 @@ reason to fetch from an unimplemented source.
    npm run go
    ```
 
-   Retain the returned `runId`. The current plan has 234 bounded
+   Retain the returned `runId`. The current plan has 263 bounded
    source/query scopes across 27 enabled discovery sources. It is a declared
    breadth target, not a claim that every result page has already been read.
 2. Monitor `scripts/inspect-collection-jobs.mjs <run-id>`. Railway processes
@@ -123,6 +123,12 @@ reason to fetch from an unimplemented source.
    be closed while a planned initial scope, a native next page, an in-progress
    scope, or selected review work remains. Only allow a closure with blockers
    when each blocker has frozen evidence.
+
+   Before final reconciliation, run `analyze-reference-gaps.mjs`, rebuild the
+   controlled model/form registry, refresh only explicitly stated candidate
+   facts, and rerun matcher v2. An Ikora/Myra series label alone is never enough
+   for a numerical comparison: form subtype and known material must agree, and
+   a known model conflict is terminal.
 
    ```powershell
    npm run references:match-known -- <scout-run-id>

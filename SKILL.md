@@ -131,11 +131,14 @@ retrieval evidence, never authentication or automatic price comparability.
    not described as searched until a source-specific original-lot, price,
    image and pagination gate is live. Refresh official ECB reference rates on
    Railway with `refresh-reference-fx.mjs`. For newly harvested Auctionet lots,
-   queue up to 200–300 high-priority detail enrichments with
+   queue 400–600 high-priority detail enrichments with
    `select-reference-enrichment.mjs`; let Railway run
    `reference-detail-enrichment-worker.mjs` to completion and freeze the hero
-   image with `archive-reference-images.mjs`. Then run `backfill-object-corpus.mjs` and
-   `match-known-reference-corpus.mjs` so compatible, already frozen sold lots
+   image with `archive-reference-images.mjs`. Run
+   `analyze-reference-gaps.mjs` on the reviewed shortlist, rebuild the
+   controlled model/form registry with `build-model-registry.mjs`, then run
+   `backfill-object-corpus.mjs` and the v2 `match-known-reference-corpus.mjs` so
+   compatible, already frozen sold lots
    can be linked without browser cost. For every selected candidate, complete
    its remaining original-house reference plan.
    Use `scripts/record-reference-checks.mjs`. A no-result outcome is valid only
@@ -208,7 +211,8 @@ retrieval evidence, never authentication or automatic price comparability.
   expiring source URLs.
 - `backfill-object-corpus.mjs`, `match-known-reference-corpus.mjs`,
   `start-or-resume-reference-backfill.mjs`, `reference-backfill-worker.mjs`,
-  `inspect-reference-backfill.mjs`, `refresh-reference-fx.mjs`,
+  `inspect-reference-backfill.mjs`, `analyze-reference-gaps.mjs`,
+  `build-model-registry.mjs`, `verify-matcher-v2.mjs`, `refresh-reference-fx.mjs`,
   `refresh-auction-reference-sources.mjs`, `browser-reference-receiver.mjs`,
   `build-benchmark-pairs.mjs`, `materialize-benchmark-review.mjs`,
   `import-benchmark-labels.mjs` and `export-benchmark-review.mjs` maintain the
