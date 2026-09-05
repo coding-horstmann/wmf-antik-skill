@@ -34,10 +34,11 @@ implementation gap, not evidence that WMF supply is absent.
 
 | Tier | Candidates | Use |
 |---|---|---|
-| Active direct discovery | Auctionet, Interencheres, Lot-tissimo, Drouot, Wendl, Hebergs, Olséns, Snapphane, Tradera, Bukowskis, catalogue-bounded Bruun Rasmussen, Blocket, DBA, Tori.fi, Kleinanzeigen, Leboncoin, Ricardo, Lauritz.com, Blomqvist, Hagelstam, Willhaben, Marktplaats, Subito, Wallapop | Page-by-page direct-browser batches only; document source query/catalogue, rate and continuation. Marketplace numbers are offers, not realised prices. Hagelstam archives may contribute only explicit original-lot hammer prices. Marktplaats sponsor mirrors are rejected before import. |
-| Validated but non-live candidates | Dorotheum, Koller | Maintain source-specific proof gaps; do not include in a `go` run yet |
+| Active direct discovery | Auctionet, Interencheres, Lot-tissimo, Drouot, Wendl, Hebergs, Olséns, Snapphane, Tradera, Bukowskis, catalogue-bounded Bruun Rasmussen, Blocket, DBA, Tori.fi, Kleinanzeigen, Leboncoin, Ricardo, Lauritz.com, Blomqvist, Hagelstam, Willhaben, Marktplaats, Subito, Wallapop, FINN.no, Aukro, Bazoš | Page-by-page bounded jobs; document source query/catalogue, rate and continuation. Marketplace numbers are offers, not realised prices. FINN.no is limited to 2 requests/minute; do not persist seller identity, contact data or precise location from private marketplaces. Hagelstam archives may contribute only explicit original-lot hammer prices. Marktplaats sponsor mirrors are rejected before import. |
+| Durable realised-reference backfill | Auctionet ended archive, Quittenbaum sold archive, Van Ham, Koller, Lempertz | Railway-first native pagination with original-lot URLs. Lempertz uses bounded native maker/place/series/designer terms and only explicit premium-inclusive results. A source-specific failed response becomes a durable Codex in-app Browser fallback job; it never becomes a false zero. Koller, Quittenbaum and Lempertz condition may remain nullable when the house does not publish it. |
 | Reference-only | Mehlis | Original completed lots only |
-| Expansion candidates | FINN.no, Tutti, Anibis, Allegro, Allegro Lokalnie, OLX Polska, CustoJusto, Aukro, Bazoš | Registered but disabled until each passes the same source gate; Facebook Marketplace excluded |
+| Validated but non-live candidates | Dorotheum | Maintain source-specific proof gaps; do not include in a `go` discovery run yet. |
+| Expansion candidates | Tutti, Anibis, Allegro, Allegro Lokalnie, OLX Polska, CustoJusto plus the disabled French/Benelux, UK and Nordic houses in `source-plan-manifest.mjs` | Registered but disabled until each passes the same source gate; Facebook Marketplace excluded |
 
 The list is a research queue, not a claim that any source currently permits or
 technically supports WMF collection.
@@ -45,7 +46,7 @@ technically supports WMF collection.
 ## Reference Sources
 
 Prefer original auction-house results and preserve the stated price basis.
-Potential sources include Quittenbaum, Dorotheum, Lempertz, Van Ham, Bonhams,
+Potential additional sources include Dorotheum, Lempertz, Bonhams,
 Christie's, Sotheby's, Auctionet, Bukowskis, Bruun Rasmussen, Drouot, and
 Interencheres. Use museum records and historical WMF catalogues for
 attribution, not numerical valuation.
@@ -60,7 +61,7 @@ price basis.
 A deliberately small pilot should normally cap each source at 20 explicit WMF
 results plus 5–10 broad, unbranded discovery records. A user-started
 `WMF Scout go` uses the larger source-specific safety segments in the verified
-234-scope v3 plan instead; each segment remains bounded and auditable, while
+source-specific plan instead; each segment remains bounded and auditable, while
 native pagination is continued until its explicit end or a frozen blocker.
 Record query, timestamp, page/category scope and continuation. Stop an
 individual collector when its source gate fails or its rate/technical boundary

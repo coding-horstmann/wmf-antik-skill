@@ -7,6 +7,11 @@ reviewed. A usable comparable matches the same object family and does not have
 a known conflict in material, form/model, period, dimensions, piece count,
 condition, completeness, or documented designer.
 
+A record returned only because the source search used `WMF`, while neither the
+original lot title nor catalogue text attributes it to WMF, is
+`search_context`. Keep it searchable for later identification, but never let it
+enter a value corridor until the attribution is independently upgraded.
+
 Examples of prohibited shortcuts:
 
 - a plated tray versus solid silver;
@@ -22,8 +27,13 @@ Examples of prohibited shortcuts:
   not silently blend them.
 - Preserve estimates, limits, starting bids, current bids, and dealer offers
   as context only.
-- Convert currencies using one dated FX snapshot, while retaining original
-  price, currency, basis, sale date, and source URL.
+- Convert currencies only with stored official ECB observations applicable to
+  the sale date, while retaining original price, currency, basis, sale date,
+  and source URL. Without a dated rate, keep the sale visible but exclude it
+  from the numerical corridor.
+- Never mix `sold_hammer`, `sold_with_premium`, and `realised_price` inside one
+  corridor. Select one explicit price type with at least three compatible
+  records; keep the other price bases separately visible.
 
 ## Conservative Corridor
 

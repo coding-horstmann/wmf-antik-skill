@@ -44,10 +44,33 @@ do not simulate an unbounded scroll loop.
 | Lauritz.com | `https://www.lauritz.com/da/auctions/search/<encoded-query>`. | `/da/auction/<slug>/<numeric-id>`; original lots expose description/condition, dimensions/marks when catalogued, images, end time, estimate and next/current bid. | Verified: 60 items/page and `skip=60&take=60` after native `Next page`. A zero-result query is a terminal saved scope. `Vurdering` and `Næste bud` are not sold prices. |
 | Blomqvist | `https://www.blomqvist.no/sok/<encoded-query>`, then follow every active `Auksjoner / Kategori` link returned by the search. | `/auksjoner/<category-path>/<numeric-id>`; lots expose object number, description, note/condition, images, estimate, next bid and end time. | Category/list pages use native `Neste` and `?page=2`. Do not confuse the separate `Tilslagsliste` section with active discovery; only an original ended lot can provide a realised result. |
 | Hagelstam | `https://www.hagelstam.fi/en/search?search=<encoded-query>` via the visible `Site search` field. | `/en/items/<category>/<slug>-<numeric-id>`; detail pages expose title/attribution, material, dimensions, original full-size images, start/status and, for ended lots, explicit hammer price. | Search-result pagination is source-native; the all-items archive independently shows 40/page and a `Seuraava sivu` control. Exclude expert contact details. Only explicit `Hammer price` on an ended original lot is `sold_hammer`. |
+| FINN.no | `https://www.finn.no/recommerce/forsale/search?q=<encoded-query>`. | `/recommerce/forsale/item/<numeric-id>`; details expose NOK asking price, gallery, description and stated condition. | Native `page=2` and following links were verified. Use bounded Railway HTTP at 2 requests/minute; never persist seller identity, contact data or precise location. |
+| Aukro | `https://aukro.cz/vysledky-vyhledavani?text=<encoded-query>`. | Canonical item slug ending in a stable numeric ID; detail exposes CZK price, buy-now/auction type, gallery, condition and description. | Follow native numbered pages only. Preserve buy-now as `asking_price` and live auction figures as bid/start context, never realised value. Modern WMF stainless steel remains out of scope. |
+| Bazoš | `https://www.bazos.cz/search.php?hledat=<encoded-query>`. | Cross-subdomain canonical `/inzerat/<numeric-id>/<slug>`; detail exposes CZK asking price, images and descriptive condition evidence. | Native continuation uses `crz` offsets. Do not persist seller name, phone or precise location. |
 | Willhaben | `https://www.willhaben.at/iad/kaufen-und-verkaufen/marktplatz?keyword=<encoded-query>`. | `/iad/kaufen-und-verkaufen/d/<slug>-<numeric-id>/`; details expose asking price, private/commercial signal, description, condition, category and an original gallery. | Native `page=2` and following links were verified on a 193-result WMF-Jugendstil search. Preserve only listing facts, not seller identity/contact data; “im Stil von WMF” is not attribution. |
 | Marktplaats | `https://www.marktplaats.nl/q/<plus-separated-query>/`. | Only original `/v/.../m<numeric-id>-...` ads; details expose asking price, description, material claim and a multi-image gallery. | Native page buttons and `Volgende` were verified. Reject `Topadvertentie`, seller `Catawiki` and `/v/.../a<numeric-id>` sponsor mirrors before import. |
 | Subito | `https://www.subito.it/annunci-italia/vendita/usato/?q=<encoded-query>`. | Original links end in `-<numeric-id>.htm`; cards/details expose price and images. | Native numbered pagination and next-page controls were verified. Prefer `jugendstil`, `liberty`, `art déco` and high-value object terms; broad `WMF` has heavy modern-appliance noise. |
 | Wallapop | `https://es.wallapop.com/search?keywords=<encoded-query>&order_by=most_relevance`. | `/item/<slug>-<numeric-id>`; details expose asking price, condition, brand/material claims, description and gallery. | Client-rendered results and direct details were verified. Record seen IDs after each loaded chunk and stop at no new IDs; never run an unbounded scroll loop. |
+
+## Realised-reference browser fallbacks
+
+The normal historical-reference route is Railway. Use the browser only for a
+durable `reference_backfill_jobs.status = browser_fallback` page after the
+Railway response and error have been recorded.
+
+| Source | Public result route | Required evidence and limitation |
+|---|---|---|
+| Auctionet | `https://auctionet.com/de/search?is=ended&page=<n>&q=WMF` | Preserve every native ended-search page, original lot URL/ID, visible result amount, explicit sold date and card/detail images. Continue native pages until the verified end; a parse failure is not a zero. |
+| Quittenbaum | `https://www.quittenbaum.de/de/suche/page/<n>/?q=WMF` (page 1 omits `/page/1/`) | Preserve original lot ID/URL, `Zuschlag`, sale date, catalogue text and all 2000px detail images. The house states that online condition is generally not expressly described; keep condition unknown and request a report only if the user later considers purchase. |
+| Van Ham | `https://www.van-ham.com/de/suche.html?searchText=WMF&options3=2&options2=1&options4=3&options1=0&microsites=4`; activate the visible `Alle anzeigen ...` control | Preserve canonical detail URL/slug, date and lot, `Ergebnis: € … (inkl. Aufgeld)`, lot-only title/description/material, object images and any explicit `Zustand A/B` class. Exclude unrelated search hits and contact-person images. The verified browser surface exposed 23 hits, 22 of them actual WMF lots; Railway exposed zero. |
+| Koller | `https://www.kollerauktionen.ch/de/object-search.htm?term=WMF&searchtype=archive` | Preserve numeric object ID, original detail URL/images, date, material and `Verkauft für CHF … (inkl. Aufgeld)`. The verified browser surface exposed 10 lots; Railway exposed zero. Missing condition stays unknown. Mixed `Silber und versilbert` lots must be `unknown`, never forced into either material class. |
+| Lempertz | Native search parameter `tx_kesearch_pi1[sword]` with the bounded seed set `Geislingen`, `Ikora`, `Myra`, `Breuhaus`, `Albin Müller`. | Canonical `/de/kataloge/lot/<auction>/<lot>-<slug>.html`; store catalogue/lot identity, original images, date, material, dimensions, designer and only explicit `Ergebnis … (inkl. Aufgeld)` as `sold_with_premium`. | Follow native `tx_kesearch_pi1[page]` only when exposed. The literal acronym `WMF` may return zero while maker/place/series terms return genuine WMF lots. Missing online condition remains explicitly unknown. |
+
+Import only a validated bounded bundle through
+`scripts/browser-reference-receiver.mjs`, which accepts these four original
+hosts and explicit realised price types. Include the durable `backfillJobId`;
+an empty `records` array additionally requires terminal evidence. After import
+run `backfill-object-corpus.mjs` before candidate matching.
 
 ## Detail enrichment
 
@@ -64,8 +87,8 @@ that distinction.
 
 ## Activation gate for next sources
 
-The registered next-source queue is FINN.no, Tutti, Anibis, Allegro, Allegro
-Lokalnie, OLX Polska, CustoJusto, Aukro and Bazoš. Facebook Marketplace is
+The registered next-source queue is Tutti, Anibis, Allegro, Allegro
+Lokalnie, OLX Polska and CustoJusto. Facebook Marketplace is
 excluded. Some have prototype search
 evidence, but none becomes recurring/live merely because a result page loaded.
 

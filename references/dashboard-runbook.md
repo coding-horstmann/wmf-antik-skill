@@ -25,9 +25,12 @@ stays token-light.
 | Blocket, DBA, Tori.fi | Swedish, Danish and Finnish marketplace discovery | Enabled; source-native search, stable ad IDs, detail JSON-LD and native page-2 links were proven. Asking prices are only offer context. |
 | Kleinanzeigen, Leboncoin, Ricardo | German, French and Swiss marketplace discovery | Enabled; direct search, stable ad/offer IDs, detail evidence and native continuation were proven. Asking prices and active bids are never realised references. |
 | Lauritz.com, Blomqvist, Hagelstam | Danish, Norwegian and Finnish regional-auction discovery | Enabled; direct search/catalogue path, stable lot IDs, detail evidence and native page/end behavior were proven. Blomqvist expands search categories before pagination; Hagelstam separates active lots from explicit archived hammer prices. |
+| FINN.no, Aukro, Bazoš | Norwegian and Czech private-market discovery | Enabled after direct-search, stable-ID, price/currency, detail/image/condition and pagination gates passed. Treat all marketplace prices as offers; exclude seller identity/contact/location. FINN.no is rate-limited to 2 requests/minute. |
 | Willhaben, Marktplaats, Subito, Wallapop | Austrian, Dutch, Italian and Spanish private-market discovery | Enabled through the Codex in-app Browser after stable-ID, price, gallery and continuation/end tests. Marktplaats sponsor mirrors are excluded; broad modern WMF kitchenware is filtered before detail work. |
 | Auktionshaus Mehlis | Original completed-sale reference | Reference-only |
-| Dorotheum, Koller | Staged research sources | Not included in a `go` run until their remaining individual browser gate is complete |
+| Auctionet, Quittenbaum | High-volume original completed-sale references | Durable Railway-native historical pagination; Quittenbaum detail pages add catalogue text and high-resolution images. |
+| Van Ham, Koller, Lempertz | Original completed-sale references | Durable bounded Railway collector; failed source responses become explicit Codex in-app Browser fallback jobs. Lempertz uses native bounded archive query seeds and imports only explicit `Ergebnis … (inkl. Aufgeld)`. Store `sold_with_premium`; condition may remain unknown when not published. |
+| Dorotheum and further registered houses | Staged research/reference sources | Not described as searched until their individual original-lot, price, image and pagination gate is live. |
 
 The collector does not imply pagination exhaustion. Continue only on a proven
 source-native page control and save every page scope. The dashboard is not a
@@ -46,7 +49,7 @@ reason to fetch from an unimplemented source.
    ```
 
    Retain the returned `runId`. The current plan has 234 bounded
-   source/query scopes across 24 enabled discovery sources. It is a declared
+   source/query scopes across 27 enabled discovery sources. It is a declared
    breadth target, not a claim that every result page has already been read.
 2. Monitor `scripts/inspect-collection-jobs.mjs <run-id>`. Railway processes
    compatible direct pages. In the Codex in-app browser, work every explicit
@@ -99,7 +102,17 @@ reason to fetch from an unimplemented source.
    original gallery bytes with the Codex in-app Browser page-assets bundle and
    import them with `scripts/import-browser-image-bundle.mjs`. The dashboard
    prefers frozen bucket URLs and cycles through every captured listing image.
-6. First run the deterministic known-corpus matcher; then inspect every
+6. Start or resume the durable reference archive before matching. `npm run go`
+   calls `scripts/start-or-resume-reference-backfill.mjs` and triggers Railway;
+   inspect it with `npm run references:backfill:inspect`. Railway follows every
+   native Auctionet-ended and Quittenbaum-sold page and runs the bounded Van
+   Ham/Koller/Lempertz collectors. A failed source page becomes `browser_fallback`;
+   import that original-house page through
+   `scripts/browser-reference-receiver.mjs`, with terminal evidence required
+   even for a genuine zero. Never convert a rendering/access failure into a
+   source-wide null result. Refresh dated official ECB rates on Railway with
+   `scripts/refresh-reference-fx.mjs`. Then backfill the object corpus and run the deterministic
+   known-corpus matcher; inspect every
    selected candidate's unresolved original-lot reference query plan
    in the Codex browser. Freeze the source outcomes and import them with
    `scripts/record-reference-checks.mjs`. It records a genuine no-result search
@@ -125,6 +138,16 @@ reason to fetch from an unimplemented source.
    balanced pair queue with `scripts/build-benchmark-pairs.mjs 500`, materialize
    at most 30 pairs per visual batch and import only genuinely two-pass-reviewed
    labels. Do not count queued or merely materialized pairs as visual labels.
+
+## Dashboard Views
+
+- `/` shows the newest completed run by default and allows run selection.
+- `/references` is the combined filterable reference library. Realised prices,
+  dealer offers, marketplace offers, estimates and identity-only records retain
+  visibly different roles.
+- `/ebay` redirects to the eBay offer-context filter. It is never a sold-price
+  archive.
+- `/watchlist` redirects to `/`; the current product has no watchlist workflow.
 
 ## Price Handling
 

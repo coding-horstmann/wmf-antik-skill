@@ -77,20 +77,24 @@ retrieval evidence, never authentication or automatic price comparability.
 ## Full `WMF Scout go` Workflow
 
 1. Read the run references above. From the dashboard project run `npm run go`.
-   It seeds all 36 registered contracts, starts or resumes the single unfinished
+   It seeds all registered contracts, starts or resumes the single unfinished
    `skill_go` run, creates durable jobs and triggers the Railway collector when
    configured. Do not create a competing run.
-2. Report the enabled set honestly. Currently 24 discovery sources are live:
+2. Report the enabled set honestly. Currently 27 discovery sources are live:
    **Auctionet, Interencheres, Lot-tissimo, Drouot, Wendl, Hebergs, Olséns,
    Snapphane, Tradera, Bukowskis, catalogue-bounded Bruun Rasmussen, Blocket,
    DBA, Tori.fi, Kleinanzeigen, Leboncoin, Ricardo, Lauritz.com, Blomqvist and
-   Hagelstam, Willhaben, Marktplaats, Subito and Wallapop**. **Mehlis** is
-   reference-only.
-3. The registry additionally contains **Dorotheum, Koller, FINN.no, Tutti,
-   Anibis, Allegro, Allegro Lokalnie, OLX Polska, CustoJusto, Aukro and Bazoš**.
-   Do not count any of them as searched until its own public-access, stable-ID,
-   price, image and pagination/end gate passes. Facebook Marketplace is
-   excluded.
+   Hagelstam, Willhaben, Marktplaats, Subito, Wallapop, FINN.no, Aukro and
+   Bazoš**. **Mehlis** is
+   reference-only. The durable sold-reference backfill has live Railway
+   adapters for **Auctionet, Quittenbaum, Van Ham, Koller and Lempertz**; a
+   source-specific failure becomes bounded Codex in-app Browser work.
+3. The registry contains 74 discovery, reference and research contracts. Its
+   disabled expansion queue includes Dorotheum, Tutti, Anibis, Allegro,
+   Allegro Lokalnie, OLX Polska, CustoJusto and additional French/Benelux, UK
+   and Nordic auction houses documented
+   in `source-plan-manifest.mjs`. Do not count any as searched merely because it
+   is registered. Facebook Marketplace is excluded.
 4. Monitor `scripts/inspect-collection-jobs.mjs <run-id>`. Railway completes
    only source-compatible direct pages. A blocked, dynamic or ambiguous server
    response becomes `browser_fallback`; work every such job in the Codex
@@ -113,38 +117,66 @@ retrieval evidence, never authentication or automatic price comparability.
    the Codex in-app Browser and import it with
    `import-browser-image-bundle.mjs`. Never call an archived-but-uninspected
    file an image review.
-7. First run `match-known-reference-corpus.mjs` so compatible, already frozen
-   sold lots can be linked without browser cost. Then, for every selected
-   candidate, complete its remaining original-house reference plan.
+7. Start or resume `start-or-resume-reference-backfill.mjs`; ordinary `npm run
+   go` already does this. Railway must work every native historical page of
+   Auctionet's ended archive and Quittenbaum's sold archive, plus the bounded
+   Van Ham, Koller and Lempertz collectors. Lempertz uses its proven native
+   `tx_kesearch_pi1[sword]` route with a small maker/place/series/designer seed
+   set and stores only explicit `Ergebnis … (inkl. Aufgeld)` records. Monitor with
+   `inspect-reference-backfill.mjs`. A failed server response becomes a
+   durable `browser_fallback` job and is completed only in the Codex in-app
+   Browser through `browser-reference-receiver.mjs`, including explicit
+   terminal evidence for a genuine zero-result page. Never substitute a local
+   or Chrome scrape. Registered research houses and context aggregators are
+   not described as searched until a source-specific original-lot, price,
+   image and pagination gate is live. Refresh official ECB reference rates on
+   Railway with `refresh-reference-fx.mjs`. For newly harvested Auctionet lots,
+   queue up to 200–300 high-priority detail enrichments with
+   `select-reference-enrichment.mjs`; let Railway run
+   `reference-detail-enrichment-worker.mjs` to completion and freeze the hero
+   image with `archive-reference-images.mjs`. Then run `backfill-object-corpus.mjs` and
+   `match-known-reference-corpus.mjs` so compatible, already frozen sold lots
+   can be linked without browser cost. For every selected candidate, complete
+   its remaining original-house reference plan.
    Use `scripts/record-reference-checks.mjs`. A no-result outcome is valid only
    with terminal evidence for every planned source. An exact/near reference
    requires the original sold-lot URL, price basis, material, form/model and an
    explanation. Keep estimates, active bids and offers out of realised values.
 8. Run `scripts/reconcile-reference-matches.mjs`. A numerical EUR corridor
-   requires at least three compatible realised results and reports Q1, median
-   and Q3. One or two results are `sparse`: show them with links but create no
-   corridor. `directional_spread_eur` means conservative Q1 minus acquisition
-   price, never the upper reference value or range width.
+   requires at least three compatible realised results of one explicit price
+   type and reports Q1, median and Q3. Never mix hammer prices with
+   premium-inclusive prices. Foreign currencies enter only through stored ECB
+   observations applicable to the sale date. One or two results are `sparse`:
+   show them with links but create no corridor. `directional_spread_eur` means
+   conservative Q1 minus acquisition price, never the upper reference value or
+   range width.
 9. Run `scripts/backfill-object-corpus.mjs`. Preserve several views per object
-   and the separate roles `gold_sold_reference`, `silver_offer_context`,
-   `live_candidate`, and `negative_example`. Never mix offer prices into the
-   sold corpus.
+   and the separate roles `gold_sold_reference`, `sold_context`,
+   `dealer_context`, `estimate_context`, `identity_context`,
+   `silver_offer_context`, `live_candidate`, and `negative_example`. Never mix
+   offers, estimates or identity context into the valuation-grade sold corpus.
 10. Maintain a balanced 300–500 pair benchmark with
-    `scripts/build-benchmark-pairs.mjs`, `materialize-benchmark-review.mjs`,
+    `scripts/build-quality-benchmark-pairs.mjs`, `materialize-benchmark-review.mjs`,
     `import-benchmark-labels.mjs` and `export-benchmark-review.mjs`.
     Visual/model similarity and valuation comparability are separate labels.
     Codex inspects both objects in two passes. A metadata-prefiltered `queued`
-    pair is not an AI-reviewed visual label. Send only disagreements and a
-    small 20–30-pair audit sample to the user.
+    pair is not an AI-reviewed visual label. Codex completes the 300–500 labels
+    by viewing the generated contact sheets and recording both passes; run
+    `inspect-quality-sprint.mjs` before declaring the benchmark complete;
+    the user remains the final authority and receives only disagreements or an
+    optional small audit sample, never a mandatory manual labeling burden.
 11. Preserve explicit user decisions as `user_confirmed` without upgrading
     maker, material or physical authenticity. Run `advance-scout-go` until it
     closes the run. It must refuse completion while planned pages, pagination,
-    selected image/detail reviews or reference work remain open, unless every
-    blocker has frozen evidence.
+    selected image/detail reviews, reference pages or historical backfill jobs
+    remain open, unless every blocker has frozen evidence.
 12. The database-backed dashboard updates without redeployment after ordinary
-    runs. Deploy only code changes. Report source coverage, Railway/browser
-    routing, raw/unique counts, shortlist, all linked comparable results,
-    corridor status, corpus/benchmark counts and unresolved risks.
+   runs. Deploy only code changes. The landing page is the latest completed run;
+   `/references` is the filterable combined reference library and `/ebay`
+   redirects to the eBay offer-context filter. There is no watchlist workflow.
+   Report source coverage, Railway/browser routing, raw/unique counts,
+   shortlist, all linked comparable results, corridor status,
+   corpus/benchmark counts and unresolved risks.
 
 ## Candidate And Review Rules
 
@@ -175,6 +207,9 @@ retrieval evidence, never authentication or automatic price comparability.
   `import-browser-image-bundle.mjs` preserve shortlist images independently of
   expiring source URLs.
 - `backfill-object-corpus.mjs`, `match-known-reference-corpus.mjs`,
+  `start-or-resume-reference-backfill.mjs`, `reference-backfill-worker.mjs`,
+  `inspect-reference-backfill.mjs`, `refresh-reference-fx.mjs`,
+  `refresh-auction-reference-sources.mjs`, `browser-reference-receiver.mjs`,
   `build-benchmark-pairs.mjs`, `materialize-benchmark-review.mjs`,
   `import-benchmark-labels.mjs` and `export-benchmark-review.mjs` maintain the
   object/reference corpus and two-axis benchmark without treating queued work
